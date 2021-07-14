@@ -2,6 +2,7 @@
 import React, { useRef, useState } from "react";
 import * as XLSX from "xlsx";
 import {
+  checkDuLieu,
   checkTrungChiTieu,
   convertDataChuan,
   getSheetNameContainOriginName,
@@ -145,8 +146,12 @@ function App() {
         ) {
           const oldChiTieu = danhSachChiTieu[chiTieuIndex];
           if (
-            chiTieu?.tenChiTieu == oldChiTieu?.tenChiTieu &&
-            chiTieu?.phanTo == oldChiTieu?.phanTo
+            checkTrungChiTieu(
+              oldChiTieu?.tenChiTieu,
+              oldChiTieu?.phanTo,
+              chiTieu?.tenChiTieu,
+              oldChiTieu?.phanTo
+            )
           ) {
             chiTieu?.duLieuVaDonVi?.forEach((dldv, indexDldv) => {
               danhSachDuLieu[chiTieuIndex + indexDldv] = dldv?.duLieu;
@@ -267,13 +272,7 @@ function App() {
         });
         if (index < data.length - 1) {
           const nextRow = data[index + 1];
-          if (
-            nextRow.col1 === undefined &&
-            nextRow.col4 !== undefined &&
-            nextRow.col4 !== null &&
-            typeof nextRow.col4 === "string" &&
-            nextRow.col4.includes("Hà Nội, ngày") == false
-          ) {
+          if (checkDuLieu(nextRow)) {
             duLieuVaDonVi.push({
               donVi: nextRow?.col4,
               duLieu: convertDataChuan(nextRow?.col5),
@@ -311,7 +310,7 @@ function App() {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
       {/* button */}
       <div
         style={{
@@ -362,7 +361,7 @@ function App() {
         style={{
           display: "flex",
           flexDirection: "column",
-          height: "500px",
+          height: "1000px",
           width: "100%",
           marginTop: 10,
           overflowY: "scroll",

@@ -33,5 +33,34 @@ export const checkTrungChiTieu = (
   if (newChiTieu == hadChiTieu && newPhanTo == hadPhanTo) {
     return true;
   }
+  if (
+    newPhanTo == hadPhanTo &&
+    (newChiTieu?.includes(hadChiTieu) || hadChiTieu?.includes(newChiTieu))
+  ) {
+    return true;
+  }
   return false;
+};
+
+export const checkDuLieu = (nextRow) => {
+  if (nextRow.col4 === undefined && nextRow.col4 === null) {
+    return false;
+  }
+  if (typeof nextRow.col4 !== "string") {
+    return false;
+  }
+  if (
+    nextRow?.col4?.includes("ngày") &&
+    nextRow?.col4?.includes("tháng") &&
+    nextRow?.col4?.includes("năm")
+  ) {
+    return false;
+  }
+  if (
+    nextRow.col1 === undefined &&
+    nextRow.col4.includes("Hà Nội, ngày") == false
+  ) {
+    return true;
+  }
+  return true;
 };
